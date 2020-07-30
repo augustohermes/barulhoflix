@@ -12,7 +12,7 @@ const Main = styled.main`
   padding-right: 5%;
 `; 
 
-function PageDefault({children}) {
+function PageDefault({ children }) {
   return (
     <>
       <Menu />
