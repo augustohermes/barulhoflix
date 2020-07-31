@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+/* eslint-disable react/no-array-index-key */
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import PageDefault from '../../../components/PageDefault';
 import FormField from '../../../components/FormField';
-
+import Button from '../../../components/Button';
 
 function CadastroCategoria() {
   const valoresIniciais = {
     nome: '',
     descricao: '',
     cor: '',
-  }
+  };
   const [categorias, setCategorias] = useState([]);
   const [values, setValues] = useState(valoresIniciais);
 
@@ -18,28 +19,44 @@ function CadastroCategoria() {
     setValues({
       ...values,
       [chave]: valor, // nome: 'valor'
-    })
+    });
   }
 
   function handleChange(infosDoEvento) {
     setValue(
       infosDoEvento.target.getAttribute('name'),
-      infosDoEvento.target.value);
-    }
+      infosDoEvento.target.value,
+    );
+  }
+
+  useEffect(() => {
+    const URL = 'http://localhost:8080/categorias';
+    fetch(URL);
+      .then(async (respostaDoServidor) => {
+        const resposta = await respostaDoServidor.json();
+        setCategorias([
+          ...resposta,
+        ]);
+    });
+  }, []);
 
   return (
     <PageDefault>
-      <h1>Cadastrar nova categoria: {values.nome}</h1>
+      <h1>
+        Cadastrar nova categoria:
+        {values.nome}
+      </h1>
 
       <form onSubmit={function handleSubmit(infosDoEvento) {
         infosDoEvento.preventDefault();
         setCategorias([
           ...categorias,
-          values
+          values,
         ]);
 
-        setValues(valoresIniciais)
-      }}>
+        setValues(valoresIniciais);
+      }}
+      >
 
         <FormField
           label="Nome da Categoria"
@@ -64,8 +81,8 @@ function CadastroCategoria() {
           value={values.cor}
           onChange={handleChange}
         />
-        
-          {/* <div>
+
+        {/* <div>
             <label>
               Descrição:
               <textarea
@@ -76,8 +93,8 @@ function CadastroCategoria() {
               />
             </label>
           </div> */}
-          
-          {/* <div>
+
+        {/* <div>
             <label>
               Cor:
               <input
@@ -89,28 +106,24 @@ function CadastroCategoria() {
             </label>
           </div> */}
 
-
-        <button>
+        <Button>
           Cadastrar
-        </button>
+        </Button>
       </form>
 
       <ul>
-        {categorias.map((categoria, indice) => {
-          return (
-            <li key={`${categoria}${indice}`}>
-              {categoria.nome}
-            </li>
-          )
-        })}
+        {categorias.map((categoria, indice) => (
+          <li key={`${categoria}${indice}`}>
+            {categoria.titulo}
+          </li>
+        ))}
       </ul>
-
 
       <Link to="/">
         Ir para home
       </Link>
     </PageDefault>
-  )
+  );
 }
 
 export default CadastroCategoria;
