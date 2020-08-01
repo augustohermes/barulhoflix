@@ -33,12 +33,14 @@ function CadastroVideo() {
         event.preventDefault();
         // alert('Video Cadastrado com sucesso!!!1!');
 
-        const categoriaPick = categorias.find((categoria) => categoria.titulo === values.categoria);
+        const categoriaEscolhida = categorias.find((categoria) => {
+          return categoria.titulo === values.categoria;
+        });
 
         videosRepository.create({
           titulo: values.titulo,
           url: values.url,
-          categoriaId: categoriaPick.id,
+          categoriaId: categoriaEscolhida.id,
         })
           .then(() => {
             // eslint-disable-next-line no-console
